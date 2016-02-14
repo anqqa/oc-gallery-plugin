@@ -1,0 +1,13 @@
+<section class="full grid flyers">
+
+    {% for flyer in flyers %}
+        <div class="grid__item">
+            <a href="{{ flyer.url }}" style="background-image: url({{ flyer.image.path }});">
+                <h2>
+                    {{ flyer.name }}
+                </h2>
+            </a>
+        </div>
+    {% endfor %}
+
+</section>

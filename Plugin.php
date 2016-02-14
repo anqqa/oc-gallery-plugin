@@ -11,14 +11,14 @@ class Plugin extends PluginBase {
     /**
      * Returns information about this plugin.
      *
-     * @return array
+     * @return  array
      */
     public function pluginDetails() {
         return [
             'name'        => 'Klubitus Gallery',
             'description' => 'Image galleries for Klubitus.',
             'author'      => 'Antti Qvickström',
-            'icon'        => 'icon-picture',
+            'icon'        => 'icon-camera-retro',
             'homepage'    => 'https://github.com/anqqa/oc-gallery-plugin',
         ];
     }
@@ -26,14 +26,11 @@ class Plugin extends PluginBase {
     /**
      * Registers any front-end components implemented in this plugin.
      *
-     * @return array
+     * @return  array
      */
-    public function registerComponents()
-    {
-        return []; // Remove this line to activate
-
+    public function registerComponents() {
         return [
-            'Klubitus\Gallery\Components\MyComponent' => 'myComponent',
+            'Klubitus\Gallery\Components\Flyers' => 'galleryFlyers',
         ];
     }
 
