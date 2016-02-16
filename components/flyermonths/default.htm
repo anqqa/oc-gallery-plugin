@@ -1,0 +1,26 @@
+<section class="full monthmenu">
+    <nav class="horizontal">
+        <ol class="monthmenu__years">
+            {% for year, yearData in flyersPerMonth %}
+                <li {{ yearData.active ? 'class="active"' }}>
+                    <a href="{{ yearData.url }}">{{ year > 0 ? year : '???' }}</a>
+                </li>
+            {% endfor %}
+        </ol>
+
+        <hr>
+
+        {% for year, yearData in flyersPerMonth %}
+            {% if yearData.active %}
+                <ol class="monthmenu__months">
+                    {% for month, monthData in yearData.months %}
+                        <li {{ monthData.active ? 'class="active"' }}>
+                            <a href="{{ monthData.url }}">{{ month > 0 ? ('2000-' ~ month)|strftime('%h') : '???' }}
+                                </a>
+                        </li>
+                    {% endfor %}
+                </ol>
+            {% endif %}
+        {% endfor %}
+    </nav>
+</section>

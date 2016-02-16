@@ -30,7 +30,8 @@ class Plugin extends PluginBase {
      */
     public function registerComponents() {
         return [
-            'Klubitus\Gallery\Components\Flyers' => 'galleryFlyers',
+            'Klubitus\Gallery\Components\Flyers'      => 'galleryFlyers',
+            'Klubitus\Gallery\Components\FlyerMonths' => 'galleryFlyerPerMonth',
         ];
     }
 

@@ -1,0 +1,5 @@
+<div class="pagination">
+    {% partial __SELF__ ~ '::pagination-list' records=flyers %}
+    |
+    {{ flyers.firstItem|number_format }} - {{ flyers.lastItem|number_format }} / {{ flyers.total|number_format }}
+</div>

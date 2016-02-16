@@ -7,6 +7,8 @@ use Cms\Classes\Page;
 use Klubitus\Calendar\Models\Flyer as FlyerModel;
 use Lang;
 use October\Rain\Support\Collection;
+use Redirect;
+use Request;
 
 
 class Flyers extends ComponentBase {
@@ -29,6 +31,11 @@ class Flyers extends ComponentBase {
      */
     public $listType;
 
+    /**
+     * @var  int
+     */
+    public $month;
+    public $year;
 
     public function componentDetails() {
         return [
@@ -83,16 +90,22 @@ class Flyers extends ComponentBase {
             return $this->flyers;
         }
 
+        $currentPage = input('page');
+
         /** @var  Collection  $flyers */
         switch ($this->listType) {
             case self::NEW_FLYERS:
                 $flyers = FlyerModel::with('image')
                     ->recentFlyers()
-                    ->limit(16)
-                    ->get();
+                    ->paginate(16, $currentPage);
                 break;
 
             case self::BY_DATE:
+                $flyers = FlyerModel::with('image')
+                    ->date($this->year, $this->month)
+                    ->paginate(16, $currentPage);
+                break;
+
             default:
                 return [];
         }
@@ -100,6 +113,17 @@ class Flyers extends ComponentBase {
         $flyers->each(function(FlyerModel $flyer) {
             $flyer->setUrl($this->flyerPage, $this->controller);
         });
+
+        // Pagination
+        $query = ['page' => ''];
+        $paginationUrl = Request::url() . '?' . http_build_query($query);
+
+        $lastPage = $flyers->lastPage();
+        if ($currentPage == 'last' || ($currentPage > $lastPage && $currentPage > 1)) {
+            return Redirect::to($paginationUrl . $lastPage);
+        }
+
+        $this->page['paginationUrl'] = $paginationUrl;
 
         return $flyers;
     }
@@ -113,7 +137,9 @@ class Flyers extends ComponentBase {
 
 
     protected function prepareVars() {
-        $this->listType  = $this->property('listType');
+        $this->month     = $this->page['month'] = $this->property('month') !== false ? (int)$this->property('month') : null;
+        $this->year      = $this->page['year']  = $this->property('year') !== false ? (int)$this->property('year') : null;
+        $this->listType  = is_null($this->year) ? $this->property('listType') : self::BY_DATE;
         $this->flyerPage = $this->property('flyerPage');
     }
 
