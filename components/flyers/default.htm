@@ -1,5 +1,6 @@
+{% partial "@pagination" %}
+
 <section class="full grid flyers">
-    {% partial "@pagination" %}
 
     {% for flyer in flyers %}
         <div class="grid__item">
@@ -12,3 +13,5 @@
     {% endfor %}
 
 </section>
+
+{% partial "@pagination" %}

@@ -15,6 +15,7 @@ class Flyers extends ComponentBase {
 
     const BY_DATE    = 'by_date';
     const NEW_FLYERS = 'new_flyers';
+    const SEARCH     = 'search';
 
     /**
      * @var  string
@@ -91,19 +92,34 @@ class Flyers extends ComponentBase {
         }
 
         $currentPage = input('page');
+        $search      = trim(input('search'));
 
         /** @var  Collection  $flyers */
         switch ($this->listType) {
+            case self::BY_DATE:
+                $flyers = FlyerModel::with('image')
+                    ->date($this->year, $this->month)
+                    ->paginate(16, $currentPage);
+                break;
+
             case self::NEW_FLYERS:
                 $flyers = FlyerModel::with('image')
                     ->recentFlyers()
                     ->paginate(16, $currentPage);
                 break;
 
-            case self::BY_DATE:
-                $flyers = FlyerModel::with('image')
-                    ->date($this->year, $this->month)
-                    ->paginate(16, $currentPage);
+            case self::SEARCH:
+                $query = FlyerModel::with('image')
+                    ->search($search);
+
+                if ($this->year) {
+                    $query->date($this->year, $this->month);
+                }
+                else {
+                    $query->recentFlyers();
+                }
+
+                $flyers = $query->paginate(16, $currentPage);
                 break;
 
             default:
@@ -115,11 +131,13 @@ class Flyers extends ComponentBase {
         });
 
         // Pagination
-        $query = ['page' => ''];
+        $query = [];
+        $search and $query['search'] = $search;
+        $query['page'] = '';
         $paginationUrl = Request::url() . '?' . http_build_query($query);
 
         $lastPage = $flyers->lastPage();
-        if ($currentPage == 'last' || ($currentPage > $lastPage && $currentPage > 1)) {
+        if ($currentPage > $lastPage && $currentPage > 1) {
             return Redirect::to($paginationUrl . $lastPage);
         }
 
@@ -139,8 +157,17 @@ class Flyers extends ComponentBase {
     protected function prepareVars() {
         $this->month     = $this->page['month'] = $this->property('month') !== false ? (int)$this->property('month') : null;
         $this->year      = $this->page['year']  = $this->property('year') !== false ? (int)$this->property('year') : null;
-        $this->listType  = is_null($this->year) ? $this->property('listType') : self::BY_DATE;
         $this->flyerPage = $this->property('flyerPage');
+
+        if (trim(input('search'))) {
+            $this->listType = self::SEARCH;
+        }
+        else if (!is_null($this->year)) {
+            $this->listType = self::BY_DATE;
+        }
+        else {
+            $this->listType = $this->property('listType');
+        }
     }
 
 }
