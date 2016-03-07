@@ -1,0 +1,9 @@
+<section class="flyer">
+    <img class="image" src="{{ flyer.image.path }}" alt="">
+
+    <nav class="actions">
+        {% if flyer.event %}
+            <a class="button" href="">{{ 'Event'|_ }}</a>
+        {% endif %}
+    </nav>
+</section>

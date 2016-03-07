@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Import
+
+# Model Form Field configuration
+form: $/klubitus/gallery/models/import/fields.yaml
+
+# Model Class name
+modelClass: Klubitus\Gallery\Models\Import
+
+# Default redirect location
+defaultRedirect: klubitus/gallery/import
+
+# Create page
+create:
+    title: Create Import
+    redirect: klubitus/gallery/import/update/:id
+    redirectClose: klubitus/gallery/import
+
+# Update page
+update:
+    title: Edit Import
+    redirect: klubitus/gallery/import
+    redirectClose: klubitus/gallery/import
+
+# Preview page
+preview:
+    title: Preview Import

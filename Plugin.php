@@ -8,6 +8,12 @@ use System\Classes\PluginBase;
  */
 class Plugin extends PluginBase {
 
+    public $require = [
+        'Klubitus.Comment',
+        'RainLab.User',
+    ];
+
+
     /**
      * Returns information about this plugin.
      *
@@ -23,6 +29,7 @@ class Plugin extends PluginBase {
         ];
     }
 
+
     /**
      * Registers any front-end components implemented in this plugin.
      *
@@ -30,10 +37,30 @@ class Plugin extends PluginBase {
      */
     public function registerComponents() {
         return [
+            'Klubitus\Gallery\Components\Flyer'       => 'galleryFlyer',
             'Klubitus\Gallery\Components\Flyers'      => 'galleryFlyers',
             'Klubitus\Gallery\Components\FlyerMonths' => 'galleryFlyerPerMonth',
         ];
     }
+
+
+    /**
+     * Registers back-end navigation items for this plugin.
+     *
+     * @return  array
+     */
+    public function registerNavigation() {
+        return [
+            'calendar' => [
+                'label'       => 'Gallery',
+                'url'         => Backend::url('klubitus/gallery/migrate'),
+                'icon'        => 'icon-camera-retro',
+                'permissions' => ['klubitus.gallery.*'],
+                'order'       => 110,
+            ],
+        ];
+    }
+
 
     /**
      * Registers any back-end permissions used by this plugin.
@@ -48,26 +75,6 @@ class Plugin extends PluginBase {
             'klubitus.gallery.some_permission' => [
                 'tab' => 'Gallery',
                 'label' => 'Some permission'
-            ],
-        ];
-    }
-
-    /**
-     * Registers back-end navigation items for this plugin.
-     *
-     * @return array
-     */
-    public function registerNavigation()
-    {
-        return []; // Remove this line to activate
-
-        return [
-            'galleries' => [
-                'label'       => 'Gallery',
-                'url'         => Backend::url('klubitus/gallery/mycontroller'),
-                'icon'        => 'icon-leaf',
-                'permissions' => ['klubitus.gallery.*'],
-                'order'       => 500,
             ],
         ];
     }
